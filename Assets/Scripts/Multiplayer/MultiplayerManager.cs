@@ -37,15 +37,14 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 			return;
 		}
 
-		var player = state.players[_room.SessionId];
-		InstantiatePrefab(_playerPrefab, player);
-
+		InitializePlayer(state);
 		state.players.ForEach(InitializeEnemy);
 	}
 
-	private Vector3 GetPosition(Player player)
+	private void InitializePlayer(State state)
 	{
-		return new Vector3(player.x - 200, 0, player.y - 200) / 40;
+		var player = state.players[_room.SessionId];
+		InstantiatePrefab(_playerPrefab, player);
 	}
 
 	private void InitializeEnemy(string key, Player player)
@@ -54,8 +53,13 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 		InstantiatePrefab(_enemyPrefab, player);
 	}
 
-	private void InstantiatePrefab(GameObject prefab, Player player)
+	private static void InstantiatePrefab(GameObject prefab, Player player)
 	{
 		Instantiate(prefab, GetPosition(player), Quaternion.identity);
+	}
+
+	private static Vector3 GetPosition(Player player)
+	{
+		return new Vector3(player.x - 200, 0, player.y - 200) / 40;
 	}
 }
