@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
@@ -9,6 +10,18 @@ public class Controller : MonoBehaviour
 		var h = Input.GetAxis("Horizontal");
 		var v = Input.GetAxis("Vertical");
 
-		_playerCharacter.SetDirection(new Vector3(h, 0, v));
+		_playerCharacter.SetTranslation(new Vector3(h, 0, v));
+
+		SendMove();
+	}
+
+	private void SendMove()
+	{
+		_playerCharacter.GetMoveInfo(out var position);
+		MultiplayerManager.Instance.UpdateRemotePosition(new Dictionary<string, object>
+		{
+			{ "x", position.x },
+			{ "y", position.z },
+		});
 	}
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Colyseus;
 using Generated;
 using UnityEngine;
@@ -5,9 +6,14 @@ using UnityEngine;
 public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 {
 	[SerializeField] private GameObject _playerPrefab;
-	[SerializeField] private GameObject _enemyPrefab;
+	[SerializeField] private EnemyController _enemyController;
 
 	private ColyseusRoom<State> _room;
+
+	public void UpdateRemotePosition(Dictionary<string, object> message)
+	{
+		SendMessage("move", message);
+	}
 
 	protected override void Awake()
 	{
@@ -21,6 +27,8 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 	{
 		base.OnDestroy();
 
+		_room.State.players.OnAdd -= OnAddPlayer;
+		_room.State.players.OnRemove -= OnRemovePlayer;
 		_room.Leave();
 	}
 
@@ -37,29 +45,45 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 			return;
 		}
 
-		InitializePlayer(state);
-		state.players.ForEach(InitializeEnemy);
+		state.players.ForEach(InitializePlayer);
+		_room.State.players.OnAdd += OnAddPlayer;
+		_room.State.players.OnRemove += OnRemovePlayer;
 	}
 
-	private void InitializePlayer(State state)
+	private void OnAddPlayer(string key, Player player)
 	{
-		var player = state.players[_room.SessionId];
-		InstantiatePrefab(_playerPrefab, player);
+		InitializeEnemy(player);
 	}
 
-	private void InitializeEnemy(string key, Player player)
+	private void OnRemovePlayer(string key, Player value)
 	{
-		if (key == _room.SessionId) return;
-		InstantiatePrefab(_enemyPrefab, player);
 	}
 
-	private static void InstantiatePrefab(GameObject prefab, Player player)
+	private void InitializePlayer(string key, Player player)
 	{
-		Instantiate(prefab, GetPosition(player), Quaternion.identity);
+		if (key == _room.SessionId)
+		{
+			Instantiate(_playerPrefab, GetPosition(player), Quaternion.identity);
+		}
+		else
+		{
+			InitializeEnemy(player);
+		}
+	}
+
+	private void InitializeEnemy(Player player)
+	{
+		var enemy = Instantiate(_enemyController, GetPosition(player), Quaternion.identity);
+		player.OnChange += enemy.OnChange;
+	}
+
+	private void SendMessage(string key, Dictionary<string, object> message)
+	{
+		_room.Send(key, message);
 	}
 
 	private static Vector3 GetPosition(Player player)
 	{
-		return new Vector3(player.x - 200, 0, player.y - 200) / 40;
+		return new Vector3(player.x, 0, player.y);
 	}
 }

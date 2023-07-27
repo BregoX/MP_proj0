@@ -4,20 +4,25 @@ public class PlayerCharacter : MonoBehaviour
 {
 	[SerializeField] private float _speed = 2;
 
-	private Vector3 _direction;
+	private Vector3 _translation;
 
-	public void SetDirection(Vector3 direction)
+	public void SetTranslation(Vector3 translation)
 	{
-		_direction = direction;
+		_translation = translation;
 	}
 
 	private void Update()
 	{
-		Move(_direction);
+		Move(_translation);
 	}
 
-	private void Move(Vector3 direction)
+	private void Move(Vector3 translation)
 	{
-		transform.position += direction * (Time.deltaTime * _speed);
+		transform.position += translation * (Time.deltaTime * _speed);
+	}
+
+	public void GetMoveInfo(out Vector3 position)
+	{
+		position = transform.position;
 	}
 }
