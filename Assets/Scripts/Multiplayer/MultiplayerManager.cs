@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 {
+	private const string StateHandlerEndpoint = "state_handler";
+	private const string MoveEndpoint = "move";
+
 	[SerializeField] private GameObject _playerPrefab;
 	[SerializeField] private EnemyController _enemyController;
 
@@ -12,7 +15,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 
 	public void UpdateRemotePosition(Dictionary<string, object> message)
 	{
-		SendMessage("move", message);
+		SendMessage(MoveEndpoint, message);
 	}
 
 	protected override void Awake()
@@ -34,7 +37,7 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 
 	private async void Connect()
 	{
-		_room = await Instance.client.JoinOrCreate<State>("state_handler");
+		_room = await Instance.client.JoinOrCreate<State>(StateHandlerEndpoint);
 		_room.OnStateChange += OnStateChange;
 	}
 
