@@ -3,26 +3,29 @@ using UnityEngine;
 public class PlayerCharacter : MonoBehaviour
 {
 	[SerializeField] private float _speed = 2;
+	[SerializeField] private Rigidbody _rigidbody;
 
-	private Vector3 _translation;
+	private Vector3 _velocity;
 
-	public void SetTranslation(Vector3 translation)
+	public void SetVelocity(Vector3 velocity)
 	{
-		_translation = translation;
+
+		_velocity = velocity;
 	}
 
-	private void Update()
+	private void FixedUpdate()
 	{
-		Move(_translation);
+		Move(_velocity);
 	}
 
-	private void Move(Vector3 translation)
+	private void Move(Vector3 velocity)
 	{
-		transform.position += translation * (Time.deltaTime * _speed);
+		_rigidbody.velocity = (transform.forward * velocity.z + transform.right * velocity.x).normalized * _speed;
 	}
 
-	public void GetMoveInfo(out Vector3 position)
+	public void GetMoveInfo(out Vector3 position, out Vector3 velocity)
 	{
 		position = transform.position;
+		velocity = _rigidbody.velocity;
 	}
 }

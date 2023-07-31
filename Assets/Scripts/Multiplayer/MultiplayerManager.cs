@@ -87,6 +87,6 @@ public class MultiplayerManager : ColyseusManager<MultiplayerManager>
 
 	private static Vector3 GetPosition(Player player)
 	{
-		return new Vector3(player.x, 0, player.y);
+		return new Vector3(player.pX, player.pY, player.pZ);
 	}
 }

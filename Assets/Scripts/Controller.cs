@@ -10,18 +10,22 @@ public class Controller : MonoBehaviour
 		var h = Input.GetAxis("Horizontal");
 		var v = Input.GetAxis("Vertical");
 
-		_playerCharacter.SetTranslation(new Vector3(h, 0, v));
+		_playerCharacter.SetVelocity(new Vector3(h, 0, v));
 
 		SendMove();
 	}
 
 	private void SendMove()
 	{
-		_playerCharacter.GetMoveInfo(out var position);
+		_playerCharacter.GetMoveInfo(out var position, out var velocity);
 		MultiplayerManager.Instance.UpdateRemotePosition(new Dictionary<string, object>
 		{
-			{ "x", position.x },
-			{ "y", position.z },
+			{ "pX", position.x },
+			{ "pY", position.y },
+			{ "pZ", position.z },
+			{ "vX", velocity.x },
+			{ "vY", velocity.y },
+			{ "vZ", velocity.z }
 		});
 	}
 }
