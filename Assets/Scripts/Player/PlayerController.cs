@@ -1,14 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Controller : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
 	[SerializeField] private PlayerCharacter _playerCharacter;
 
 	private void Update()
 	{
-		var h = Input.GetAxis("Horizontal");
-		var v = Input.GetAxis("Vertical");
+		var h = Input.GetAxisRaw("Horizontal");
+		var v = Input.GetAxisRaw("Vertical");
+
+		var mX = Input.GetAxis("Mouse X");
+		var my = Input.GetAxis("Mouse Y");
 
 		_playerCharacter.SetVelocity(new Vector3(h, 0, v));
 
