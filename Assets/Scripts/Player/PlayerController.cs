@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	[SerializeField] private PlayerCharacter _playerCharacter;
+	[SerializeField] private float _mouseSensitivity = 2f;
 
 	private void Update()
 	{
@@ -13,7 +14,8 @@ public class PlayerController : MonoBehaviour
 		var mX = Input.GetAxis("Mouse X");
 		var my = Input.GetAxis("Mouse Y");
 
-		_playerCharacter.SetVelocity(new Vector3(h, 0, v));
+		_playerCharacter.SetInput(h, v, mX * _mouseSensitivity);
+		_playerCharacter.RotateX(-my * _mouseSensitivity);
 
 		SendMove();
 	}

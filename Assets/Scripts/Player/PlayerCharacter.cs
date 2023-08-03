@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
@@ -5,22 +6,48 @@ public class PlayerCharacter : MonoBehaviour
 	[SerializeField] private float _speed = 2;
 	[SerializeField] private Rigidbody _rigidbody;
 	[SerializeField] private Transform _head;
+	[SerializeField] private Transform _cameraHolder;
 
-	private Vector3 _velocity;
+	private float _inputX;
+	private float _inputZ;
+	private float _rotateY;
 
-	public void SetVelocity(Vector3 velocity)
+	private void Start()
 	{
-		_velocity = velocity;
+		var camera = Camera.main.transform;
+		camera.parent = _cameraHolder;
+		camera.localRotation = Quaternion.identity;
+		camera.localPosition = Vector3.zero;
+		
+	}
+
+	public void SetInput(float inputX, float inputZ, float rotationY)
+	{
+		_inputX = inputX;
+		_inputZ = inputZ;
+		_rotateY += rotationY;
+	}
+
+	public void RotateX(float value)
+	{
+		_head.Rotate(value, 0, 0);
 	}
 
 	private void FixedUpdate()
 	{
-		Move(_velocity);
+		Move();
+		RotateY();
 	}
 
-	private void Move(Vector3 velocity)
+	private void RotateY()
 	{
-		_rigidbody.velocity = (transform.forward * velocity.z + transform.right * velocity.x).normalized * _speed;
+		_rigidbody.angularVelocity = new Vector3(0, _rotateY, 0);
+		_rotateY = 0;
+	}
+
+	private void Move()
+	{
+		_rigidbody.velocity = (transform.forward * _inputZ + transform.right * _inputX).normalized * _speed;
 	}
 
 	public void GetMoveInfo(out Vector3 position, out Vector3 velocity)
