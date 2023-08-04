@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Character.Enemy;
 using Colyseus.Schema;
+using Generated;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -9,6 +12,21 @@ public class EnemyController : MonoBehaviour
 	private readonly List<float> _receiveTimeInterval = new() { 0, 0, 0, 0, 0 };
 
 	private float _lastReceivedTime;
+	private Player _player;
+
+	public void Init(Player player)
+	{
+		_player = player;
+		
+		_player.OnChange += OnChange;
+		_character.SetSpeed(player.speed);
+	}
+
+	public void Destroy()
+	{
+		_player.OnChange -= OnChange;
+		Destroy(gameObject);
+	}
 
 	private void UpdateReceiveIntervals()
 	{
@@ -19,11 +37,11 @@ public class EnemyController : MonoBehaviour
 		_lastReceivedTime = time;
 	}
 
-	public void OnChange(List<DataChange> changes)
+	private void OnChange(List<DataChange> changes)
 	{
 		UpdateReceiveIntervals();
 		var position = _character.TargetPosition;
-		var velocity = Vector3.zero;
+		var velocity = _character.Velocity;
 
 		foreach (var change in changes)
 		{
@@ -54,5 +72,10 @@ public class EnemyController : MonoBehaviour
 		}
 
 		_character.SetupMoveInfo(position, velocity, _receiveTimeInterval.Average());
+	}
+
+	private void OnDestroy()
+	{
+		_player.OnChange += OnChange;
 	}
 }

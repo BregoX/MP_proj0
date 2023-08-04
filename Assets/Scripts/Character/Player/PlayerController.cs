@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Character.Player;
+using Multiplayer;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,9 +15,15 @@ public class PlayerController : MonoBehaviour
 
 		var mX = Input.GetAxis("Mouse X");
 		var my = Input.GetAxis("Mouse Y");
+		var isJump = Input.GetKeyDown(KeyCode.Space);
 
 		_playerCharacter.SetInput(h, v, mX * _mouseSensitivity);
 		_playerCharacter.RotateX(-my * _mouseSensitivity);
+
+		if (isJump)
+		{
+			_playerCharacter.Jump();
+		}
 
 		SendMove();
 	}

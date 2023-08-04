@@ -1,0 +1,78 @@
+using UnityEngine;
+
+namespace Character.Player
+{
+	public class PlayerCharacter : Character
+	{
+		[SerializeField] private Rigidbody _rigidbody;
+		[SerializeField] private Transform _head;
+		[SerializeField] private Transform _cameraHolder;
+		[SerializeField] private float _minAngle = -45;
+		[SerializeField] private float _maxAngle = 45;
+		[SerializeField] private float _jumpForce = 5;
+		[SerializeField] private CheckFly _checkFly;
+		[SerializeField] private float _jumpDelay;
+
+		private float _inputX;
+		private float _inputZ;
+		private float _rotateY;
+		private float _currentRotationY;
+		private float _jumpTime;
+
+		private void Start()
+		{
+			var camera = Camera.main.transform;
+			camera.parent = _cameraHolder;
+			camera.localPosition = Vector3.zero;
+			camera.localRotation = Quaternion.identity;
+		}
+
+		public void SetInput(float inputX, float inputZ, float rotationY)
+		{
+			_inputX = inputX;
+			_inputZ = inputZ;
+			_rotateY += rotationY;
+		}
+
+		public void RotateX(float value)
+		{
+			_currentRotationY = Mathf.Clamp(_currentRotationY + value, _minAngle, _maxAngle);
+			_head.localEulerAngles = new Vector3(_currentRotationY, 0, 0);
+		}
+
+		public void Jump()
+		{
+			if (_checkFly.IsFly || (Time.time - _jumpTime) < _jumpDelay) return;
+
+			_jumpTime = Time.time;
+			_rigidbody.AddForce(0, _jumpForce, 0, ForceMode.VelocityChange);
+		}
+
+		public void GetMoveInfo(out Vector3 position, out Vector3 velocity)
+		{
+			position = transform.position;
+			velocity = _rigidbody.velocity;
+		}
+
+		private void FixedUpdate()
+		{
+			Move();
+			RotateY();
+		}
+
+		private void RotateY()
+		{
+			_rigidbody.angularVelocity = new Vector3(0, _rotateY, 0);
+			_rotateY = 0;
+		}
+
+		private void Move()
+		{
+			var newVelocity = (transform.forward * _inputZ + transform.right * _inputX).normalized * Speed;
+			newVelocity.y = _rigidbody.velocity.y;
+			Velocity = newVelocity;
+
+			_rigidbody.velocity = Velocity;
+		}
+	}
+}
