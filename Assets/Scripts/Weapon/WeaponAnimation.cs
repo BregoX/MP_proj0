@@ -7,16 +7,16 @@ namespace Weapon
 		private const string ShotTriggerName = "shot";
 
 		[SerializeField] private Animator _weaponAnimator;
-		[SerializeField] private Weapon _weapon;
+		[SerializeField] private Gun _playerGun;
 
 		private void Start()
 		{
-			_weapon.ShootOccured += OnShoot;
+			_playerGun.ShootOccured += OnShoot;
 		}
 
 		private void OnDestroy()
 		{
-			_weapon.ShootOccured -= OnShoot;
+			_playerGun.ShootOccured -= OnShoot;
 		}
 
 		private void OnShoot()

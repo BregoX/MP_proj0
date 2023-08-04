@@ -1,13 +1,17 @@
 using System.Collections.Generic;
 using Character.Player;
+using DefaultNamespace;
 using Multiplayer;
 using UnityEngine;
+using Weapon;
 
 public class PlayerController : MonoBehaviour
 {
 	[SerializeField] private PlayerCharacter _playerCharacter;
 	[SerializeField] private float _mouseSensitivity = 2f;
-	[SerializeField] private Weapon.Weapon _weapon;
+	[SerializeField] private PlayerGun _playerGun;
+
+	private MultiplayerManager MultiplayerManager => MultiplayerManager.Instance;
 
 	private void Update()
 	{
@@ -27,9 +31,9 @@ public class PlayerController : MonoBehaviour
 			_playerCharacter.Jump();
 		}
 
-		if (isShoot)
+		if (isShoot && _playerGun.TryShoot(out var shotInfo))
 		{
-			_weapon.Shoot();
+			MultiplayerManager.SendShotInfo(ref shotInfo);
 		}
 
 		SendMove();
@@ -38,7 +42,7 @@ public class PlayerController : MonoBehaviour
 	private void SendMove()
 	{
 		_playerCharacter.GetMoveInfo(out var position, out var velocity, out float rotateX, out float rotateY);
-		MultiplayerManager.Instance.UpdateRemotePosition(new Dictionary<string, object>
+		MultiplayerManager.UpdateRemotePosition(new Dictionary<string, object>
 		{
 			{ "pX", position.x },
 			{ "pY", position.y },
@@ -49,5 +53,10 @@ public class PlayerController : MonoBehaviour
 			{ "rX", rotateX },
 			{ "rY", rotateY }
 		});
+	}
+
+	private void SendShot(ref ShotInfo shotInfo)
+	{
+		MultiplayerManager.SendShotInfo(ref shotInfo);
 	}
 }

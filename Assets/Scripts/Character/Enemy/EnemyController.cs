@@ -1,14 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Character.Enemy;
 using Colyseus.Schema;
+using DefaultNamespace;
 using Generated;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
 	[SerializeField] private EnemyCharacter _character;
+	[SerializeField] private EnemyGun _enemyGun;
+
 	private readonly List<float> _receiveTimeInterval = new() { 0, 0, 0, 0, 0 };
 
 	private float _lastReceivedTime;
@@ -26,6 +28,14 @@ public class EnemyController : MonoBehaviour
 	{
 		_player.OnChange -= OnChange;
 		Destroy(gameObject);
+	}
+
+	public void Shoot(in ShotInfo shotInfo)
+	{
+		var position = new Vector3(shotInfo.pX, shotInfo.pY, shotInfo.pZ);
+		var velocity = new Vector3(shotInfo.dX, shotInfo.dY, shotInfo.dZ);
+		
+		_enemyGun.Shoot(position, velocity);
 	}
 
 	private void UpdateReceiveIntervals()
