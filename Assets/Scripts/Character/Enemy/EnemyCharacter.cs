@@ -4,6 +4,8 @@ namespace Character.Enemy
 {
 	public class EnemyCharacter : Character
 	{
+		[SerializeField] private Transform _head;
+
 		public Vector3 TargetPosition { get; private set; }
 
 		private float _velocityMagnitude;
@@ -31,13 +33,30 @@ namespace Character.Enemy
 			}
 		}
 
-		public void SetupMoveInfo(in Vector3 position, in Vector3 velocity, in float averageTime)
+		public void SetupMoveInfo(
+			in Vector3 position,
+			in Vector3 velocity,
+			in float averageTime,
+			in float? rotateX,
+			in float? rotateY)
 		{
 			var pos = position + velocity * averageTime;
 
 			TargetPosition = pos;
 			_velocityMagnitude = velocity.magnitude;
 			Velocity = velocity;
+
+			if (rotateX.HasValue)
+			{
+				var eulerAngles = _head.localEulerAngles;
+				_head.localEulerAngles = new Vector3(rotateX.Value, eulerAngles.y, eulerAngles.z);
+			}
+
+			if (rotateY.HasValue)
+			{
+				var eulerAngles = transform.localEulerAngles;
+				transform.localEulerAngles = new Vector3(eulerAngles.x, rotateY.Value, eulerAngles.z);
+			}
 		}
 	}
 }

@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour
 	public void Init(Player player)
 	{
 		_player = player;
-		
+
 		_player.OnChange += OnChange;
 		_character.SetSpeed(player.speed);
 	}
@@ -42,6 +42,8 @@ public class EnemyController : MonoBehaviour
 		UpdateReceiveIntervals();
 		var position = _character.TargetPosition;
 		var velocity = _character.Velocity;
+		float? rotateX = null;
+		float? rotateY = null;
 
 		foreach (var change in changes)
 		{
@@ -65,13 +67,19 @@ public class EnemyController : MonoBehaviour
 				case "vZ":
 					velocity.z = (float)change.Value;
 					break;
+				case "rX":
+					rotateX = (float)change.Value;
+					break;
+				case "rY":
+					rotateY = (float)change.Value;
+					break;
 				default:
 					Debug.Log($"Unknown field {change.Field} with value {change.Value}");
 					break;
 			}
 		}
 
-		_character.SetupMoveInfo(position, velocity, _receiveTimeInterval.Average());
+		_character.SetupMoveInfo(position, velocity, _receiveTimeInterval.Average(), rotateX, rotateY);
 	}
 
 	private void OnDestroy()
