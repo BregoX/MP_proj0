@@ -105,6 +105,7 @@ MonoBehaviour:
   _checkFly: {fileID: 8898510304055905082}
   _animator: {fileID: 4762605550825280409}
   _character: {fileID: 7798407298274654799}
+  _sitAnimator: {fileID: 8896380743072537514}
 --- !u!114 &8898510304055905082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +263,12 @@ Animator:
 --- !u!95 &2008817458075916115 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 6904501239181707049, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
+    type: 3}
+  m_PrefabInstance: {fileID: 4913840189456797818}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8896380743072537514 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4559679910971083728, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
     type: 3}
   m_PrefabInstance: {fileID: 4913840189456797818}
   m_PrefabAsset: {fileID: 0}

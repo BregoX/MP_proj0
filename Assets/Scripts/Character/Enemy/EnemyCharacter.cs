@@ -38,7 +38,8 @@ namespace Character.Enemy
 			in Vector3 velocity,
 			in float averageTime,
 			in float? rotateX,
-			in float? rotateY)
+			in float? rotateY,
+			in bool? isSit)
 		{
 			var pos = position + velocity * averageTime;
 
@@ -56,6 +57,11 @@ namespace Character.Enemy
 			{
 				var eulerAngles = transform.localEulerAngles;
 				transform.localEulerAngles = new Vector3(eulerAngles.x, rotateY.Value, eulerAngles.z);
+			}
+
+			if (isSit.HasValue)
+			{
+				IsSit = isSit.Value;
 			}
 		}
 	}

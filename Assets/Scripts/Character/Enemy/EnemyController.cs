@@ -54,6 +54,7 @@ public class EnemyController : MonoBehaviour
 		var velocity = _character.Velocity;
 		float? rotateX = null;
 		float? rotateY = null;
+		bool? isSit = null;
 
 		foreach (var change in changes)
 		{
@@ -83,13 +84,16 @@ public class EnemyController : MonoBehaviour
 				case "rY":
 					rotateY = (float)change.Value;
 					break;
+				case "sit":
+					isSit = (bool)change.Value;
+					break;
 				default:
 					Debug.Log($"Unknown field {change.Field} with value {change.Value}");
 					break;
 			}
 		}
 
-		_character.SetupMoveInfo(position, velocity, _receiveTimeInterval.Average(), rotateX, rotateY);
+		_character.SetupMoveInfo(position, velocity, _receiveTimeInterval.Average(), rotateX, rotateY, isSit);
 	}
 
 	private void OnDestroy()

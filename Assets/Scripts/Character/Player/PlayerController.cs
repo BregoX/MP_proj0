@@ -22,8 +22,9 @@ public class PlayerController : MonoBehaviour
 		var my = Input.GetAxis("Mouse Y");
 		var isJump = Input.GetKeyDown(KeyCode.Space);
 		var isShoot = Input.GetMouseButton(0);
+		var isSit = Input.GetKey(KeyCode.LeftShift);
 
-		_playerCharacter.SetInput(h, v, mX * _mouseSensitivity);
+		_playerCharacter.SetInput(h, v, mX * _mouseSensitivity, isSit);
 		_playerCharacter.RotateX(-my * _mouseSensitivity);
 
 		if (isJump)
@@ -41,7 +42,12 @@ public class PlayerController : MonoBehaviour
 
 	private void SendMove()
 	{
-		_playerCharacter.GetMoveInfo(out var position, out var velocity, out float rotateX, out float rotateY);
+		_playerCharacter.GetMoveInfo(out var position,
+			out var velocity,
+			out var rotateX,
+			out var rotateY,
+			out var isSit);
+
 		MultiplayerManager.UpdateRemotePosition(new Dictionary<string, object>
 		{
 			{ "pX", position.x },
@@ -51,7 +57,8 @@ public class PlayerController : MonoBehaviour
 			{ "vY", velocity.y },
 			{ "vZ", velocity.z },
 			{ "rX", rotateX },
-			{ "rY", rotateY }
+			{ "rY", rotateY },
+			{ "sit", isSit }
 		});
 	}
 

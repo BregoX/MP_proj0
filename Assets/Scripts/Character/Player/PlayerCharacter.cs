@@ -27,11 +27,16 @@ namespace Character.Player
 			camera.localRotation = Quaternion.identity;
 		}
 
-		public void SetInput(float inputX, float inputZ, float rotationY)
+		public void SetInput(
+			float inputX,
+			float inputZ,
+			float rotationY,
+			bool isSit)
 		{
 			_inputX = inputX;
 			_inputZ = inputZ;
 			_rotateY += rotationY;
+			IsSit = isSit;
 		}
 
 		public void RotateX(float value)
@@ -48,14 +53,19 @@ namespace Character.Player
 			_rigidbody.AddForce(0, _jumpForce, 0, ForceMode.VelocityChange);
 		}
 
-		public void GetMoveInfo(out Vector3 position, out Vector3 velocity, out float rotateX, out float rotateY)
+		public void GetMoveInfo(
+			out Vector3 position,
+			out Vector3 velocity,
+			out float rotateX,
+			out float rotateY,
+			out bool isSit)
 		{
 			position = transform.position;
 			velocity = _rigidbody.velocity;
 
 			rotateX = _head.localEulerAngles.x;
 			rotateY = transform.localEulerAngles.y;
-
+			isSit = IsSit;
 		}
 
 		private void FixedUpdate()

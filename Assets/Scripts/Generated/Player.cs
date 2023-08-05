@@ -28,5 +28,7 @@ namespace Generated
 		[Type(7, "number")] public float rX = default(float);
 
 		[Type(8, "number")] public float rY = default(float);
+
+		[Type(9, "boolean")] public bool sit = default(bool);
 	}
 }
