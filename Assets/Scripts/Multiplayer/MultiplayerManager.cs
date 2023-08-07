@@ -17,6 +17,7 @@ namespace Multiplayer
 
 		[SerializeField] private PlayerController _playerControllerPrototype;
 		[SerializeField] private EnemyController _enemyControllerPrototype;
+		[SerializeField] private LossCounter _lossCounter;
 
 		private Dictionary<string, EnemyController> _enemys = new();
 		private PlayerController _playerController;
@@ -121,7 +122,7 @@ namespace Multiplayer
 			{
 				var enemy = _enemys[key];
 				enemy.Destroy();
-
+				enemy.LossCountChanged -= OnEnemyLossCountChanged;
 				_enemys.Remove(key);
 			}
 		}
@@ -142,12 +143,24 @@ namespace Multiplayer
 		{
 			_playerController = Instantiate(_playerControllerPrototype, GetPosition(player), Quaternion.identity);
 			_playerController.Init(player);
+			_playerController.LossCountChanged += OnPlayerLossCountChanged;
+		}
+
+		private void OnPlayerLossCountChanged(int lossCount)
+		{
+			_lossCounter.SetupMyLoses(lossCount);
+		}
+
+		private void OnEnemyLossCountChanged(int lossCount)
+		{
+			_lossCounter.SetupOpponentLoses(lossCount);
 		}
 
 		private void InitializeEnemyController(string key, Player player)
 		{
 			var enemy = Instantiate(_enemyControllerPrototype, GetPosition(player), Quaternion.identity);
 			enemy.Init(key, player);
+			enemy.LossCountChanged += OnEnemyLossCountChanged;
 			_enemys.Add(key, enemy);
 		}
 

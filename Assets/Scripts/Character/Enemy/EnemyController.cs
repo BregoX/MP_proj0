@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Character.Enemy;
@@ -12,6 +13,8 @@ public class EnemyController : MonoBehaviour
 	[SerializeField] private EnemyCharacter _character;
 	[SerializeField] private EnemyGun _enemyGun;
 
+	public event Action<int> LossCountChanged;
+	
 	private readonly List<float> _receiveTimeInterval = new() { 0, 0, 0, 0, 0 };
 
 	private float _lastReceivedTime;
@@ -40,6 +43,7 @@ public class EnemyController : MonoBehaviour
 	public void Destroy()
 	{
 		_player.OnChange -= OnChange;
+		
 		Destroy(gameObject);
 	}
 
@@ -69,6 +73,7 @@ public class EnemyController : MonoBehaviour
 		float? rotateY = null;
 		bool? isSit = null;
 		int? currentHP = null;
+		int? lossCount = null;
 
 		foreach (var change in changes)
 		{
@@ -107,6 +112,9 @@ public class EnemyController : MonoBehaviour
 				case "sit":
 					isSit = (bool)change.Value;
 					break;
+				case "loss":
+					lossCount = (byte)change.Value;
+					break;
 				default:
 					Debug.Log($"Unknown field {change.Field} with value {change.Value}");
 					break;
@@ -115,10 +123,15 @@ public class EnemyController : MonoBehaviour
 
 		_character.SetupMoveInfo(position, velocity, _receiveTimeInterval.Average(), rotateX, rotateY, isSit);
 		_character.SetupHealth(currentHP);
+
+		if (lossCount.HasValue)
+		{
+			LossCountChanged?.Invoke(lossCount.Value);
+		}
 	}
 
 	private void OnDestroy()
 	{
-		_player.OnChange += OnChange;
+		_player.OnChange -= OnChange;
 	}
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Character.Player;
@@ -15,6 +16,8 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private PlayerGun _playerGun;
 	[SerializeField] private float _restartDelay = 3f;
 
+	public event Action<int> LossCountChanged;
+
 	private Player _player;
 
 	private MultiplayerManager MultiplayerManager => MultiplayerManager.Instance;
@@ -31,6 +34,7 @@ public class PlayerController : MonoBehaviour
 	private void OnChange(List<DataChange> changes)
 	{
 		int? currentHP = null;
+		int? lossCount = null;
 
 		foreach (var change in changes)
 		{
@@ -38,6 +42,9 @@ public class PlayerController : MonoBehaviour
 			{
 				case "cHP":
 					currentHP = (sbyte)change.Value;
+					break;
+				case "loss":
+					lossCount = (byte)change.Value;
 					break;
 
 				default:
@@ -47,6 +54,11 @@ public class PlayerController : MonoBehaviour
 		}
 
 		_playerCharacter.UpdateHealth(currentHP);
+
+		if (lossCount.HasValue)
+		{
+			LossCountChanged?.Invoke(lossCount.Value);
+		}
 	}
 
 
@@ -107,7 +119,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		_player.OnChange += OnChange;
+		_player.OnChange -= OnChange;
 	}
 
 	public void Restart(RestartInfo restartInfo)
