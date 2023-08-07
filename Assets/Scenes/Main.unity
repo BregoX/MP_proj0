@@ -271,9 +271,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _colyseusSettings: {fileID: 11400000, guid: 9259bdee36ea4427ea1c1b05a75b40bd, type: 2}
-  _playerController: {fileID: 876715530808149927, guid: 365db48719ab14552a1bb3f3095476dc,
+  _playerControllerPrototype: {fileID: 876715530808149927, guid: 365db48719ab14552a1bb3f3095476dc,
     type: 3}
-  _enemyController: {fileID: 5988162541103535930, guid: adacfdccc6fb44aa0b6eae7124621126,
+  _enemyControllerPrototype: {fileID: 5988162541103535930, guid: adacfdccc6fb44aa0b6eae7124621126,
     type: 3}
 --- !u!4 &261712364
 Transform:

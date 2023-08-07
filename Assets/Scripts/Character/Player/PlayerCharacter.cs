@@ -68,6 +68,14 @@ namespace Character.Player
 			isSit = IsSit;
 		}
 
+		public void SetupRestartPosition(float positionX, float positionZ)
+		{
+			SetInput(0, 0, 0, false);
+
+			_rigidbody.velocity = Vector3.zero;
+			transform.position = new Vector3(positionX, 0, positionZ);
+		}
+
 		private void FixedUpdate()
 		{
 			Move();

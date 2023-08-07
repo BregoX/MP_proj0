@@ -12,12 +12,14 @@ namespace Multiplayer
 		private const string MoveEndpoint = "move";
 		private const string ShootEndpoint = "shoot";
 		private const string ShootMessageFromServer = "SHOOT";
+		private const string RestartMessageFromServer = "Restart";
 		private const string DamageMessage = "damage";
 
-		[SerializeField] private PlayerController _playerController;
-		[SerializeField] private EnemyController _enemyController;
+		[SerializeField] private PlayerController _playerControllerPrototype;
+		[SerializeField] private EnemyController _enemyControllerPrototype;
 
 		private Dictionary<string, EnemyController> _enemys = new();
+		private PlayerController _playerController;
 
 		private ColyseusRoom<State> _room;
 
@@ -65,14 +67,15 @@ namespace Multiplayer
 		{
 			var data = new Dictionary<string, object>
 			{
-				{ "speed", _playerController.Speed },
-				{ "mHP", _playerController.MaxHealth }
+				{ "speed", _playerControllerPrototype.Speed },
+				{ "mHP", _playerControllerPrototype.MaxHealth }
 			};
 
 			_room = await Instance.client.JoinOrCreate<State>(StateHandlerEndpoint, data);
 			_room.OnStateChange += OnStateChange;
 
 			_room.OnMessage<string>(ShootMessageFromServer, OnShootReceive);
+			_room.OnMessage<string>(RestartMessageFromServer, OnRestartReceive);
 		}
 
 		private void OnShootReceive(string shotInfoMessage)
@@ -87,6 +90,12 @@ namespace Multiplayer
 			{
 				Debug.Log("No enemy on shoot " + shotInfoMessage);
 			}
+		}
+
+		private void OnRestartReceive(string restartMessage)
+		{
+			var restartInfo = JsonUtility.FromJson<RestartInfo>(restartMessage);
+			_playerController.Restart(restartInfo);
 		}
 
 		private void OnStateChange(State state, bool isFirstState)
@@ -131,13 +140,13 @@ namespace Multiplayer
 
 		private void InitializePlayerController(Player player)
 		{
-			var playerController = Instantiate(_playerController, GetPosition(player), Quaternion.identity);
-			playerController.Init(player);
+			_playerController = Instantiate(_playerControllerPrototype, GetPosition(player), Quaternion.identity);
+			_playerController.Init(player);
 		}
 
 		private void InitializeEnemyController(string key, Player player)
 		{
-			var enemy = Instantiate(_enemyController, GetPosition(player), Quaternion.identity);
+			var enemy = Instantiate(_enemyControllerPrototype, GetPosition(player), Quaternion.identity);
 			enemy.Init(key, player);
 			_enemys.Add(key, enemy);
 		}

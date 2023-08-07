@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using Character.Player;
 using Colyseus.Schema;
+using DefaultNamespace;
 using Generated;
 using Multiplayer;
 using UnityEngine;
@@ -11,10 +13,12 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private PlayerCharacter _playerCharacter;
 	[SerializeField] private float _mouseSensitivity = 2f;
 	[SerializeField] private PlayerGun _playerGun;
+	[SerializeField] private float _restartDelay = 3f;
 
 	private Player _player;
 
 	private MultiplayerManager MultiplayerManager => MultiplayerManager.Instance;
+	private bool _isHold;
 	public float Speed => _playerCharacter.Speed;
 	public float MaxHealth => _playerCharacter.MaxHealth;
 
@@ -48,6 +52,12 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
+		if (_isHold)
+		{
+			SendMove();
+			return;
+		}
+
 		var h = Input.GetAxisRaw("Horizontal");
 		var v = Input.GetAxisRaw("Vertical");
 
@@ -98,5 +108,18 @@ public class PlayerController : MonoBehaviour
 	private void OnDestroy()
 	{
 		_player.OnChange += OnChange;
+	}
+
+	public void Restart(RestartInfo restartInfo)
+	{
+		_playerCharacter.SetupRestartPosition(restartInfo.pX, restartInfo.pZ);
+		StartCoroutine(Hold());
+	}
+
+	private IEnumerator Hold()
+	{
+		_isHold = true;
+		yield return new WaitForSecondsRealtime(_restartDelay);
+		_isHold = false;
 	}
 }

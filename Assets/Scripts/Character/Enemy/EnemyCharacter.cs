@@ -81,5 +81,12 @@ namespace Character.Enemy
 				transform.position = TargetPosition;
 			}
 		}
+
+		public void SetupHealth(int? currentHealth)
+		{
+			if (!currentHealth.HasValue) return;
+			
+			Health.SetCurrent(currentHealth.Value);
+		}
 	}
 }

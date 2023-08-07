@@ -68,11 +68,18 @@ public class EnemyController : MonoBehaviour
 		float? rotateX = null;
 		float? rotateY = null;
 		bool? isSit = null;
+		int? currentHP = null;
 
 		foreach (var change in changes)
 		{
 			switch (change.Field)
 			{
+				case "cHP":
+					var previous = (sbyte)change.PreviousValue;
+					var value = (sbyte)change.Value;
+
+					currentHP = value > previous ? value : null;
+					break;
 				case "pX":
 					position.x = (float)change.Value;
 					break;
@@ -107,6 +114,7 @@ public class EnemyController : MonoBehaviour
 		}
 
 		_character.SetupMoveInfo(position, velocity, _receiveTimeInterval.Average(), rotateX, rotateY, isSit);
+		_character.SetupHealth(currentHP);
 	}
 
 	private void OnDestroy()

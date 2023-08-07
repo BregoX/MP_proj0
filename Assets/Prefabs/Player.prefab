@@ -350,6 +350,7 @@ MonoBehaviour:
   _playerCharacter: {fileID: 9192975033391173838}
   _mouseSensitivity: 5
   _playerGun: {fileID: 2232017029131169819}
+  _restartDelay: 3
 --- !u!54 &52885718267001486
 Rigidbody:
   m_ObjectHideFlags: 0
