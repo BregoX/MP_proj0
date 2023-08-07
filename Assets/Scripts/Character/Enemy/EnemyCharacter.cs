@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Character.Enemy
@@ -5,7 +6,8 @@ namespace Character.Enemy
 	public class EnemyCharacter : Character
 	{
 		[SerializeField] private Transform _head;
-		[SerializeField] private Health _health;
+
+		public event Action<int> DamageTaken;
 
 		public Vector3 TargetPosition { get; private set; }
 
@@ -20,13 +22,14 @@ namespace Character.Enemy
 		{
 			MaxHealth = health;
 
-			_health.SetMax(health);
-			_health.SetCurrent(health);
+			Health.SetMax(health);
+			Health.SetCurrent(health);
 		}
 
 		public void ApplyDamage(int damage)
 		{
-			_health.ApplyDamage(damage);
+			Health.ApplyDamage(damage);
+			DamageTaken?.Invoke(damage);
 		}
 
 		public void SetupMoveInfo(

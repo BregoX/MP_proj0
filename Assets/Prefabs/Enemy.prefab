@@ -67,10 +67,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a39743f8a8047beaa8a370ff2758316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Health: {fileID: 41973143373582689}
   <Speed>k__BackingField: 2
   <MaxHealth>k__BackingField: 10
   _head: {fileID: 4988656419004420134}
-  _health: {fileID: 41973143373582689}
 --- !u!136 &9145490284868664121
 CapsuleCollider:
   m_ObjectHideFlags: 0

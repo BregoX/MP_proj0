@@ -4,6 +4,7 @@ using Character.Enemy;
 using Colyseus.Schema;
 using DefaultNamespace;
 using Generated;
+using Multiplayer;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -15,15 +16,25 @@ public class EnemyController : MonoBehaviour
 
 	private float _lastReceivedTime;
 	private Player _player;
+	private string _sessionId;
 
-	public void Init(Player player)
+	private MultiplayerManager MultiplayerManager => MultiplayerManager.Instance;
+
+	public void Init(string key, Player player)
 	{
+		_sessionId = key;
 		_player = player;
 
 		_character.SetSpeed(_player.speed);
-		_character.SetMaxHealth(_player.hp);
+		_character.SetMaxHealth(_player.mHP);
+		_character.DamageTaken += OnDamageTaken;
 
 		_player.OnChange += OnChange;
+	}
+
+	private void OnDamageTaken(int damage)
+	{
+		MultiplayerManager.SendDamageInfo(_sessionId, damage);
 	}
 
 	public void Destroy()

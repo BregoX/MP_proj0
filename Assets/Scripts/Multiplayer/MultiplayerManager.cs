@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Character.Player;
 using Colyseus;
 using DefaultNamespace;
 using Generated;
@@ -13,8 +12,9 @@ namespace Multiplayer
 		private const string MoveEndpoint = "move";
 		private const string ShootEndpoint = "shoot";
 		private const string ShootMessageFromServer = "SHOOT";
+		private const string DamageMessage = "damage";
 
-		[SerializeField] private PlayerCharacter _playerPrefab;
+		[SerializeField] private PlayerController _playerController;
 		[SerializeField] private EnemyController _enemyController;
 
 		private Dictionary<string, EnemyController> _enemys = new();
@@ -31,6 +31,17 @@ namespace Multiplayer
 			shotInfo.key = _room.SessionId;
 			var message = JsonUtility.ToJson(shotInfo);
 			SendMessage(ShootEndpoint, message);
+		}
+
+		public void SendDamageInfo(string enemySessionId, int damage)
+		{
+			var data = new Dictionary<string, object>()
+			{
+				{ "enemySessionId", enemySessionId },
+				{ "value", damage }
+			};
+
+			SendMessage(DamageMessage, data);
 		}
 
 		protected override void Awake()
@@ -54,8 +65,8 @@ namespace Multiplayer
 		{
 			var data = new Dictionary<string, object>
 			{
-				{ "speed", _playerPrefab.Speed },
-				{ "hp", _playerPrefab.MaxHealth },
+				{ "speed", _playerController.Speed },
+				{ "mHP", _playerController.MaxHealth }
 			};
 
 			_room = await Instance.client.JoinOrCreate<State>(StateHandlerEndpoint, data);
@@ -92,7 +103,7 @@ namespace Multiplayer
 
 		private void OnAddPlayer(string key, Player player)
 		{
-			InitializeEnemy(key, player);
+			InitializeEnemyController(key, player);
 		}
 
 		private void OnRemovePlayer(string key, Player value)
@@ -110,18 +121,24 @@ namespace Multiplayer
 		{
 			if (key == _room.SessionId)
 			{
-				Instantiate(_playerPrefab, GetPosition(player), Quaternion.identity);
+				InitializePlayerController(player);
 			}
 			else
 			{
-				InitializeEnemy(key, player);
+				InitializeEnemyController(key, player);
 			}
 		}
 
-		private void InitializeEnemy(string key, Player player)
+		private void InitializePlayerController(Player player)
+		{
+			var playerController = Instantiate(_playerController, GetPosition(player), Quaternion.identity);
+			playerController.Init(player);
+		}
+
+		private void InitializeEnemyController(string key, Player player)
 		{
 			var enemy = Instantiate(_enemyController, GetPosition(player), Quaternion.identity);
-			enemy.Init(player);
+			enemy.Init(key, player);
 			_enemys.Add(key, enemy);
 		}
 

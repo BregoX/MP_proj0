@@ -88,5 +88,12 @@ namespace Character.Player
 
 			_rigidbody.velocity = Velocity;
 		}
+
+		public void UpdateHealth(int? currentHp)
+		{
+			if (!currentHp.HasValue) return;
+
+			Health.SetCurrent(currentHp.Value);
+		}
 	}
 }

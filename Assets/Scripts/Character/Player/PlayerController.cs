@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Character.Player;
-using DefaultNamespace;
+using Colyseus.Schema;
+using Generated;
 using Multiplayer;
 using UnityEngine;
 using Weapon;
@@ -11,7 +12,39 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private float _mouseSensitivity = 2f;
 	[SerializeField] private PlayerGun _playerGun;
 
+	private Player _player;
+
 	private MultiplayerManager MultiplayerManager => MultiplayerManager.Instance;
+	public float Speed => _playerCharacter.Speed;
+	public float MaxHealth => _playerCharacter.MaxHealth;
+
+	public void Init(Player player)
+	{
+		_player = player;
+		_player.OnChange += OnChange;
+	}
+
+	private void OnChange(List<DataChange> changes)
+	{
+		int? currentHP = null;
+
+		foreach (var change in changes)
+		{
+			switch (change.Field)
+			{
+				case "cHP":
+					currentHP = (sbyte)change.Value;
+					break;
+
+				default:
+					Debug.Log($"Unknown field {change.Field} with value {change.Value}");
+					break;
+			}
+		}
+
+		_playerCharacter.UpdateHealth(currentHP);
+	}
+
 
 	private void Update()
 	{
@@ -62,8 +95,8 @@ public class PlayerController : MonoBehaviour
 		});
 	}
 
-	private void SendShot(ref ShotInfo shotInfo)
+	private void OnDestroy()
 	{
-		MultiplayerManager.SendShotInfo(ref shotInfo);
+		_player.OnChange += OnChange;
 	}
 }
