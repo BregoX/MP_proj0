@@ -20,8 +20,10 @@ public class EnemyController : MonoBehaviour
 	{
 		_player = player;
 
+		_character.SetSpeed(_player.speed);
+		_character.SetMaxHealth(_player.hp);
+
 		_player.OnChange += OnChange;
-		_character.SetSpeed(player.speed);
 	}
 
 	public void Destroy()
@@ -34,7 +36,7 @@ public class EnemyController : MonoBehaviour
 	{
 		var position = new Vector3(shotInfo.pX, shotInfo.pY, shotInfo.pZ);
 		var velocity = new Vector3(shotInfo.dX, shotInfo.dY, shotInfo.dZ);
-		
+
 		_enemyGun.Shoot(position, velocity);
 	}
 

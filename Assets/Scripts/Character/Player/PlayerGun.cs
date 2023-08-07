@@ -8,6 +8,7 @@ namespace Weapon
 		[SerializeField] private Transform _bulletPoint;
 		[SerializeField] private float _bulletSpeed = 5;
 		[SerializeField] private float _reloadTime = 0.5f;
+		[SerializeField] private int _damage = 1;
 
 		private float _lastShotTime;
 
@@ -19,7 +20,7 @@ namespace Weapon
 
 			var direction = _bulletPoint.forward;
 			var bullet = Instantiate(Bullet, _bulletPoint.position, _bulletPoint.rotation);
-			bullet.Init(direction * _bulletSpeed);
+			bullet.Init(direction * _bulletSpeed, _damage);
 			_lastShotTime = Time.time;
 
 			ShootOccured?.Invoke();

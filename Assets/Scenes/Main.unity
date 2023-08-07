@@ -273,7 +273,7 @@ MonoBehaviour:
   _colyseusSettings: {fileID: 11400000, guid: 9259bdee36ea4427ea1c1b05a75b40bd, type: 2}
   _playerPrefab: {fileID: 5713253425002912060, guid: 365db48719ab14552a1bb3f3095476dc,
     type: 3}
-  _enemyController: {fileID: 860786605204898623, guid: adacfdccc6fb44aa0b6eae7124621126,
+  _enemyController: {fileID: 1249751028100312980, guid: adacfdccc6fb44aa0b6eae7124621126,
     type: 3}
 --- !u!4 &261712364
 Transform:

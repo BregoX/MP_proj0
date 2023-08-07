@@ -52,7 +52,11 @@ namespace Multiplayer
 
 		private async void Connect()
 		{
-			var data = new Dictionary<string, object> { { "speed", _playerPrefab.Speed } };
+			var data = new Dictionary<string, object>
+			{
+				{ "speed", _playerPrefab.Speed },
+				{ "hp", _playerPrefab.MaxHealth },
+			};
 
 			_room = await Instance.client.JoinOrCreate<State>(StateHandlerEndpoint, data);
 			_room.OnStateChange += OnStateChange;

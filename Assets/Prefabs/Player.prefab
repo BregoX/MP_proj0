@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Speed>k__BackingField: 2
+  <MaxHealth>k__BackingField: 10
   _rigidbody: {fileID: 2381554822929836107}
   _head: {fileID: 8472952738270270209}
   _cameraHolder: {fileID: 2321317447040135260}
@@ -175,6 +176,7 @@ MonoBehaviour:
   _bulletPoint: {fileID: 5780498355153467721}
   _bulletSpeed: 30
   _reloadTime: 0.2
+  _damage: 1
 --- !u!114 &2703449138190343042
 MonoBehaviour:
   m_ObjectHideFlags: 0

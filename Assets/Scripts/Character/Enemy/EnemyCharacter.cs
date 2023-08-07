@@ -5,6 +5,7 @@ namespace Character.Enemy
 	public class EnemyCharacter : Character
 	{
 		[SerializeField] private Transform _head;
+		[SerializeField] private Health _health;
 
 		public Vector3 TargetPosition { get; private set; }
 
@@ -15,22 +16,17 @@ namespace Character.Enemy
 			Speed = speed;
 		}
 
-		private void Start()
+		public void SetMaxHealth(int health)
 		{
-			TargetPosition = transform.position;
+			MaxHealth = health;
+
+			_health.SetMax(health);
+			_health.SetCurrent(health);
 		}
 
-		private void Update()
+		public void ApplyDamage(int damage)
 		{
-			if (_velocityMagnitude > 0.1)
-			{
-				var maxDistance = _velocityMagnitude * Time.deltaTime;
-				transform.position = Vector3.MoveTowards(transform.position, TargetPosition, maxDistance);
-			}
-			else
-			{
-				transform.position = TargetPosition;
-			}
+			_health.ApplyDamage(damage);
 		}
 
 		public void SetupMoveInfo(
@@ -62,6 +58,24 @@ namespace Character.Enemy
 			if (isSit.HasValue)
 			{
 				IsSit = isSit.Value;
+			}
+		}
+
+		private void Start()
+		{
+			TargetPosition = transform.position;
+		}
+
+		private void Update()
+		{
+			if (_velocityMagnitude > 0.1)
+			{
+				var maxDistance = _velocityMagnitude * Time.deltaTime;
+				transform.position = Vector3.MoveTowards(transform.position, TargetPosition, maxDistance);
+			}
+			else
+			{
+				transform.position = TargetPosition;
 			}
 		}
 	}
