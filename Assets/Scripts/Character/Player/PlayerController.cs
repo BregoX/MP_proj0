@@ -7,13 +7,15 @@ using DefaultNamespace;
 using Generated;
 using Multiplayer;
 using UnityEngine;
-using Weapon;
 
 public class PlayerController : MonoBehaviour
 {
 	[SerializeField] private PlayerCharacter _playerCharacter;
+
 	[SerializeField] private float _mouseSensitivity = 2f;
-	[SerializeField] private PlayerGun _playerGun;
+
+	// [SerializeField] private PlayerGun _playerGun;
+	[SerializeField] private PlayerWeaponArmory _weaponArmory;
 	[SerializeField] private float _restartDelay = 3f;
 
 	public event Action<int> LossCountChanged;
@@ -78,6 +80,7 @@ public class PlayerController : MonoBehaviour
 		var isJump = Input.GetKeyDown(KeyCode.Space);
 		var isShoot = Input.GetMouseButton(0);
 		var isSit = Input.GetKey(KeyCode.LeftShift);
+		var isSwitchWeapon = Input.GetKeyDown(KeyCode.Q);
 
 		_playerCharacter.SetInput(h, v, mX * _mouseSensitivity, isSit);
 		_playerCharacter.RotateX(-my * _mouseSensitivity);
@@ -87,10 +90,16 @@ public class PlayerController : MonoBehaviour
 			_playerCharacter.Jump();
 		}
 
-		if (isShoot && _playerGun.TryShoot(out var shotInfo))
+		if (isShoot && _weaponArmory.TryShoot(out var shotInfo))
 		{
 			MultiplayerManager.SendShotInfo(ref shotInfo);
 		}
+
+		if (isSwitchWeapon && _weaponArmory.TrySwitchToNext())
+		{
+			MultiplayerManager.SendWeaponInfo(_weaponArmory.ActiveWeaponIndex);
+		}
+
 
 		SendMove();
 	}

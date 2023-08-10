@@ -11,7 +11,9 @@ namespace Multiplayer
 		private const string StateHandlerEndpoint = "state_handler";
 		private const string MoveEndpoint = "move";
 		private const string ShootEndpoint = "shoot";
+		private const string WeaponEndpoint = "weapon";
 		private const string ShootMessageFromServer = "SHOOT";
+		private const string WeaponMessageFromServer = "WEAPON";
 		private const string RestartMessageFromServer = "Restart";
 		private const string DamageMessage = "damage";
 
@@ -34,6 +36,13 @@ namespace Multiplayer
 			shotInfo.key = _room.SessionId;
 			var message = JsonUtility.ToJson(shotInfo);
 			SendMessage(ShootEndpoint, message);
+		}
+
+		public void SendWeaponInfo(int weaponIndex)
+		{
+			var weaponInfo = new WeaponInfo { i = weaponIndex, key = _room.SessionId };
+			var message = JsonUtility.ToJson(weaponInfo);
+			SendMessage(WeaponEndpoint, message);
 		}
 
 		public void SendDamageInfo(string enemySessionId, int damage)
@@ -77,6 +86,7 @@ namespace Multiplayer
 
 			_room.OnMessage<string>(ShootMessageFromServer, OnShootReceive);
 			_room.OnMessage<string>(RestartMessageFromServer, OnRestartReceive);
+			_room.OnMessage<string>(WeaponMessageFromServer, OnWeaponReceive);
 		}
 
 		private void OnShootReceive(string shotInfoMessage)
@@ -98,6 +108,21 @@ namespace Multiplayer
 			var restartInfo = JsonUtility.FromJson<RestartInfo>(restartMessage);
 			_playerController.Restart(restartInfo);
 		}
+
+		private void OnWeaponReceive(string weaponMessage)
+		{
+			var weaponInfo = JsonUtility.FromJson<WeaponInfo>(weaponMessage);
+
+			if (_enemys.TryGetValue(weaponInfo.key, out var enemy))
+			{
+				enemy.ChangeWeapon(weaponInfo);
+			}
+			else
+			{
+				Debug.Log("No enemy on change weapon " + weaponMessage);
+			}
+		}
+
 
 		private void OnStateChange(State state, bool isFirstState)
 		{

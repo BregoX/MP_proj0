@@ -285,9 +285,10 @@ GameObject:
   - component: {fileID: 4477195670740682912}
   - component: {fileID: 8682669379893610262}
   - component: {fileID: 2374216788039858765}
-  - component: {fileID: 2232017029131169819}
   - component: {fileID: 5321092594975274218}
   - component: {fileID: 7006359286525638681}
+  - component: {fileID: 6817060395005245554}
+  - component: {fileID: 1487129969683720783}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -349,7 +350,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCharacter: {fileID: 9192975033391173838}
   _mouseSensitivity: 5
-  _playerGun: {fileID: 2232017029131169819}
+  _weaponArmory: {fileID: 6817060395005245554}
   _restartDelay: 3
 --- !u!54 &52885718267001486
 Rigidbody:
@@ -434,23 +435,6 @@ MonoBehaviour:
   _animator: {fileID: 2399871045194736805}
   _character: {fileID: 9192975033391173838}
   _sitAnimator: {fileID: 5277921319885515548}
---- !u!114 &2232017029131169819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8424746925949091073}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66b13c8de0b145fa9cb99f2b33b31532, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Bullet: {fileID: 6014417668550985215, guid: c4cc71cb263a74cbaa09ee6fc69ce32b, type: 3}
-  _bulletPoint: {fileID: 493237179868246073}
-  _bulletSpeed: 30
-  _reloadTime: 0.2
-  _damage: 1
 --- !u!114 &5321092594975274218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,7 +448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponAnimator: {fileID: 3001783881385748453}
-  _playerGun: {fileID: 2232017029131169819}
+  _weaponsProvider: {fileID: 1487129969683720783}
 --- !u!114 &7006359286525638681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,6 +464,34 @@ MonoBehaviour:
   _current: 10
   _max: 10
   _healthUI: {fileID: 5041943585492846008}
+--- !u!114 &6817060395005245554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8424746925949091073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01f7d2c9d35f45b0b873e10dc7c0e268, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weapons:
+  - {fileID: 5306502564777911340}
+  - {fileID: 3698670569309859302}
+  _weaponsProvider: {fileID: 1487129969683720783}
+--- !u!114 &1487129969683720783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8424746925949091073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e212bca7a2f4ccd8bad2fe2558ffff5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8537080804295450828
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -488,6 +500,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8621390390766496884}
     m_Modifications:
+    - target: {fileID: 1064510435062398532, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3736613004858452476, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3783090178872861316, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
         type: 3}
       propertyPath: m_Name
@@ -551,7 +573,15 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1064510435062398532, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5306502564777911340}
+    - targetCorrespondingSourceObject: {fileID: 3736613004858452476, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3698670569309859302}
   m_SourcePrefab: {fileID: 100100000, guid: 5b9e5150db7b2204d98b5f69a683d1e6, type: 3}
 --- !u!4 &493237179868246073 stripped
 Transform:
@@ -577,6 +607,29 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 8537080804295450828}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5017802155493902640 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3736613004858452476, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
+    type: 3}
+  m_PrefabInstance: {fileID: 8537080804295450828}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3698670569309859302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5017802155493902640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66b13c8de0b145fa9cb99f2b33b31532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bullet: {fileID: 6014417668550985215, guid: c4cc71cb263a74cbaa09ee6fc69ce32b, type: 3}
+  _bulletPoint: {fileID: 493237179868246073}
+  _bulletSpeed: 30
+  _reloadTime: 0.2
+  _damage: 1
 --- !u!95 &5277921319885515548 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 4559679910971083728, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
@@ -595,3 +648,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8537080804295450828}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8699876251411750536 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1064510435062398532, guid: 5b9e5150db7b2204d98b5f69a683d1e6,
+    type: 3}
+  m_PrefabInstance: {fileID: 8537080804295450828}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5306502564777911340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8699876251411750536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66b13c8de0b145fa9cb99f2b33b31532, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bullet: {fileID: 6014417668550985215, guid: c4cc71cb263a74cbaa09ee6fc69ce32b, type: 3}
+  _bulletPoint: {fileID: 493237179868246073}
+  _bulletSpeed: 30
+  _reloadTime: 0.2
+  _damage: 1

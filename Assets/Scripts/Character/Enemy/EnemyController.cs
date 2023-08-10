@@ -11,7 +11,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
 	[SerializeField] private EnemyCharacter _character;
-	[SerializeField] private EnemyGun _enemyGun;
+	[SerializeField] private EnemyWeaponArmory _enemyWeaponArmory;
 
 	public event Action<int> LossCountChanged;
 	
@@ -52,7 +52,12 @@ public class EnemyController : MonoBehaviour
 		var position = new Vector3(shotInfo.pX, shotInfo.pY, shotInfo.pZ);
 		var velocity = new Vector3(shotInfo.dX, shotInfo.dY, shotInfo.dZ);
 
-		_enemyGun.Shoot(position, velocity);
+		_enemyWeaponArmory.Shoot(position, velocity);
+	}
+
+	public void ChangeWeapon(in WeaponInfo weaponInfo)
+	{
+		_enemyWeaponArmory.ChangeWeapon(weaponInfo.i);
 	}
 
 	private void UpdateReceiveIntervals()
